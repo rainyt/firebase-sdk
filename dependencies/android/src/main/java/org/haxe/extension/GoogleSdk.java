@@ -1,13 +1,16 @@
 package org.haxe.extension;
 
 
-import android.app.Activity;
-import android.content.res.AssetManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.View;
+import android.util.Log;
+
+import androidx.activity.result.ActivityResultLauncher;
+
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.FirebaseApp;
+
+import java.util.Arrays;
 
 
 /* 
@@ -36,15 +39,23 @@ import android.view.View;
 	function for performing a single task, like returning a value
 	back to Haxe from Java.
 */
-public class Google_sdk extends Extension {
-	
-	
-	public static int sampleMethod (int inputValue) {
-		
-		return inputValue * 100;
-		
+public class GoogleSdk extends Extension {
+
+	private static ActivityResultLauncher<Intent> signInLauncher;
+	/**
+	 * 登陆谷歌请求
+	 */
+	public static void loginGoogleId() {
+		FirebaseApp.initializeApp(mainActivity);
+		Intent signInIntent = AuthUI.getInstance()
+				.createSignInIntentBuilder()
+				// ... options ...
+				.setAvailableProviders(Arrays.asList(
+						new AuthUI.IdpConfig.GoogleBuilder().build()))
+				.build();
+		mainActivity.startActivity(signInIntent);
 	}
-	
+
 	
 	/**
 	 * Called when an activity you launched exits, giving you the requestCode 
@@ -52,7 +63,7 @@ public class Google_sdk extends Extension {
 	 * from it.
 	 */
 	public boolean onActivityResult (int requestCode, int resultCode, Intent data) {
-		
+		Log.i("ZSDK","onActivityResult:"+String.valueOf(requestCode));
 		return true;
 		
 	}
@@ -71,11 +82,9 @@ public class Google_sdk extends Extension {
 	 * Called when the activity is starting.
 	 */
 	public void onCreate (Bundle savedInstanceState) {
-		
-		
-		
+		FirebaseApp.initializeApp(mainActivity);
 	}
-	
+
 	
 	/**
 	 * Perform any final cleanup before an activity is destroyed.

@@ -14,8 +14,27 @@ apply plugin: 'com.android.library'
 android {
 	compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
 	buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
+	defaultConfig {
+		// ...
+		resConfigs "en" // And any other languages you support
+	}
 }
 
 dependencies {
 	api project(':deps:extension-api')
+	// Import the BoM for the Firebase platform
+	implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
+
+	// Add the dependency for the Firebase SDK for Google Analytics
+	implementation("com.google.firebase:firebase-analytics")
+
+	// Add the dependency for the Firebase Authentication library
+	// When using the BoM, you don't specify versions in Firebase library dependencies
+	implementation("com.google.firebase:firebase-auth")
+
+	// FirebaseUI for Firebase Auth
+	implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
+
+	// Also add the dependency for the Google Play services library and specify its version
+	implementation("com.google.android.gms:play-services-auth:20.7.0")
 }

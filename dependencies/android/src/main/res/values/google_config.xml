@@ -1,0 +1,3 @@
+<resources>
+    <string name="default_web_client_id" translatable="false">webClientId.apps.googleusercontent.com</string>
+</resources>

@@ -7,3 +7,4 @@ project/obj/
 #ndll/*/*.so
 #ndll/*/*.ndll
 #ndll/*/*.hash
+.gradle

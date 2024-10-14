@@ -6,6 +6,6 @@
 	<!-- Use the following for an Android Java extension, not needed otherwise -->
 	
 	<dependency name="google_sdk" path="dependencies/android" if="android" />
-	<android extension="org.haxe.extension.Google_sdk" />
+	<android extension="org.haxe.extension.GoogleSdk" />
 	
 </project>
