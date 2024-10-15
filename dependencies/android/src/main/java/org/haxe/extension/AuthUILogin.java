@@ -38,7 +38,7 @@ public class AuthUILogin implements ILogin {
     @Override
     public void logout(final SDKListener listener) {
         AuthUI.getInstance()
-                .delete(ZSDK.getInstance().activity)
+                .signOut(ZSDK.getInstance().activity)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
