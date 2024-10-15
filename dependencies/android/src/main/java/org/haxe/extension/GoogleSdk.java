@@ -48,23 +48,22 @@ public class GoogleSdk extends Extension {
 	 * 登陆谷歌请求
 	 */
 	public static void loginGoogleId() {
-		Intent signInIntent = AuthUI.getInstance()
-				.createSignInIntentBuilder()
-				// ... options ...
-				.setAvailableProviders(Arrays.asList(
-						new AuthUI.IdpConfig.EmailBuilder().build(),
-						new AuthUI.IdpConfig.GoogleBuilder().build()))
-				.build();
-		mainActivity.startActivityForResult(signInIntent, 2);
+		FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+		if(user != null){
+			onLoginSuccess();
+		}else {
+			Intent signInIntent = AuthUI.getInstance()
+					.createSignInIntentBuilder()
+					// ... options ...
+					.setAvailableProviders(Arrays.asList(
+							new AuthUI.IdpConfig.EmailBuilder().build(),
+							new AuthUI.IdpConfig.GoogleBuilder().build()))
+					.build();
+			mainActivity.startActivityForResult(signInIntent, 2);
+		}
 	}
 
-	/**
-	 * Called when an activity you launched exits, giving you the requestCode 
-	 * you started it with, the resultCode it returned, and any additional data 
-	 * from it.
-	 */
-	public boolean onActivityResult (int requestCode, int resultCode, Intent data) {
-		Log.i("ZSDK","onActivityResult:"+String.valueOf(requestCode));
+	public static void onLoginSuccess(){
 		FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 		if (user != null ){
 			Log.i("ZSDK","User login success."+user.getUid());
@@ -87,6 +86,17 @@ public class GoogleSdk extends Extension {
 				AuthUILogin.loginListener.onError(-1, "User login fail.");
 				AuthUILogin.loginListener = null;
 			}
+		}
+	}
+
+	/**
+	 * Called when an activity you launched exits, giving you the requestCode 
+	 * you started it with, the resultCode it returned, and any additional data 
+	 * from it.
+	 */
+	public boolean onActivityResult (int requestCode, int resultCode, Intent data) {
+		if (requestCode == 2){
+			onLoginSuccess();
 		}
 		return true;
 	}
