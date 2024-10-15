@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.activity.result.ActivityResultLauncher;
-
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -41,22 +44,20 @@ import java.util.Arrays;
 */
 public class GoogleSdk extends Extension {
 
-	private static ActivityResultLauncher<Intent> signInLauncher;
 	/**
 	 * 登陆谷歌请求
 	 */
 	public static void loginGoogleId() {
-		FirebaseApp.initializeApp(mainActivity);
 		Intent signInIntent = AuthUI.getInstance()
 				.createSignInIntentBuilder()
 				// ... options ...
 				.setAvailableProviders(Arrays.asList(
+						new AuthUI.IdpConfig.EmailBuilder().build(),
 						new AuthUI.IdpConfig.GoogleBuilder().build()))
 				.build();
-		mainActivity.startActivity(signInIntent);
+		mainActivity.startActivityForResult(signInIntent, 2);
 	}
 
-	
 	/**
 	 * Called when an activity you launched exits, giving you the requestCode 
 	 * you started it with, the resultCode it returned, and any additional data 
@@ -64,8 +65,30 @@ public class GoogleSdk extends Extension {
 	 */
 	public boolean onActivityResult (int requestCode, int resultCode, Intent data) {
 		Log.i("ZSDK","onActivityResult:"+String.valueOf(requestCode));
+		FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+		if (user != null ){
+			Log.i("ZSDK","User login success."+user.getUid());
+			if(AuthUILogin.loginListener != null){
+				JSONObject jsonData = new JSONObject();
+				try {
+					jsonData.put("access_token",user.getIdToken(false));
+					jsonData.put("uid",user.getUid());
+					jsonData.put("avatar",user.getPhotoUrl());
+					jsonData.put("name",user.getDisplayName());
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				AuthUILogin.loginListener.onSuccess(jsonData);
+				AuthUILogin.loginListener = null;
+			}
+		}else {
+			Log.i("ZSDK", "User login fail.");
+			if (AuthUILogin.loginListener != null) {
+				AuthUILogin.loginListener.onError(-1, "User login fail.");
+				AuthUILogin.loginListener = null;
+			}
+		}
 		return true;
-		
 	}
 
 	/**

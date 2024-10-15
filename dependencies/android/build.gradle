@@ -22,6 +22,7 @@ android {
 
 dependencies {
 	api project(':deps:extension-api')
+	api project(':deps:sxk-game-sdk')
 	// Import the BoM for the Firebase platform
 	implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
 

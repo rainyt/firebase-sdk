@@ -7,5 +7,6 @@
 	
 	<dependency name="google_sdk" path="dependencies/android" if="android" />
 	<android extension="org.haxe.extension.GoogleSdk" />
-	
+	<define name="SDK_LOGIN_org.haxe.extension.AuthUILogin"/>
+
 </project>
