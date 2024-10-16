@@ -12,3 +12,6 @@
 <assets path="google-services.json" rename="bin/app/google-services.json"/>
 ```
 > 该配置从`firebase`后台下载
+
+# 相关文档
+[Firebase控制台](https://console.firebase.google.com/)
