@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	
-	<ndll name="google_sdk" unless="android" />
-	
+		
 	<!-- Use the following for an Android Java extension, not needed otherwise -->
 	
 	<dependency name="google_sdk" path="dependencies/android" if="android" />
