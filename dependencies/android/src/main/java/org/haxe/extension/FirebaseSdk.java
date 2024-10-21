@@ -5,7 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.review.testing.FakeReviewManager;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,7 +52,7 @@ import java.util.Arrays;
 	function for performing a single task, like returning a value
 	back to Haxe from Java.
 */
-public class GoogleSdk extends Extension {
+public class FirebaseSdk extends Extension {
 
 	/**
 	 * 登陆谷歌请求
@@ -87,6 +97,40 @@ public class GoogleSdk extends Extension {
 				AuthUILogin.loginListener = null;
 			}
 		}
+	}
+
+	/**
+	 * 打开评论界面
+	 */
+	public static void openReview(int debug) {
+		Task<ReviewInfo> task = null;
+		if (debug == 1){
+			FakeReviewManager factory = new FakeReviewManager(mainContext);
+			task= factory.requestReviewFlow();
+		}else {
+			ReviewManager factory = ReviewManagerFactory.create(mainContext);
+			task = factory.requestReviewFlow();
+		}
+		Log.e("FirebaseSdk.openReview", "debug:"+debug);
+		task.addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
+			@Override
+			public void onComplete(@NonNull Task<ReviewInfo> task) {
+				Log.e("FirebaseSdk.onComplete","successed");
+				SxkGameSDK.callHaxeObject("app_review_complete", null);
+			}
+		});
+		task.addOnFailureListener(new OnFailureListener() {
+			@Override
+			public void onFailure(@NonNull Exception e) {
+				Log.e("FirebaseSdk.onFailure", e.getMessage());
+			}
+		});
+		task.addOnCanceledListener(new OnCanceledListener() {
+			@Override
+			public void onCanceled() {
+				Log.e("FirebaseSdk.onChanneld", "channel");
+			}
+		});
 	}
 
 	/**

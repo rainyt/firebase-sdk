@@ -38,4 +38,7 @@ dependencies {
 
 	// Also add the dependency for the Google Play services library and specify its version
 	implementation("com.google.android.gms:play-services-auth:20.7.0")
+
+	// 应用内评论
+	implementation 'com.google.android.play:review:2.0.1'
 }
