@@ -32,7 +32,7 @@ public class AuthUILogin implements ILogin {
     @Override
     public void login(final SDKListener listener) {
         loginListener = listener;
-        GoogleSdk.loginGoogleId();
+        FirebaseSdk.loginGoogleId();
     }
 
     @Override
