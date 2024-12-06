@@ -9,6 +9,7 @@ import lime.system.JNI;
 class FirebaseSdk {
 	#if android
 	private static var jni_loginGoogleId = JNI.createStaticMethod("org.haxe.extension.FirebaseSdk", "loginGoogleId", "()V");
+	private static var jni_setLoginMode = JNI.createStaticMethod("org.haxe.extension.FirebaseSdk", "setLoginMode", "(Ljava/lang/String;)V");
 	private static var jni_openReview = JNI.createStaticMethod("org.haxe.extension.FirebaseSdk", "openReview", "(I)V");
 	#end
 
@@ -22,6 +23,16 @@ class FirebaseSdk {
 	}
 
 	/**
+	 * 设置登录模式
+	 * @param mode email 或者 google
+	 */
+	public static function setLoginMode(mode:FirebaseSdkLoginType) {
+		#if android
+		jni_setLoginMode(mode);
+		#end
+	}
+
+	/**
 	 * 打开应用内评论功能
 	 */
 	public static function openReview(debug:Int = 0) {
@@ -29,4 +40,9 @@ class FirebaseSdk {
 		jni_openReview(debug);
 		#end
 	}
+}
+
+enum abstract FirebaseSdkLoginType(String) to String from String {
+	public var EMAIL:String = "email";
+	public var GOOGLE:String = "google";
 }

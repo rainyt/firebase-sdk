@@ -54,6 +54,35 @@ import java.util.Arrays;
 */
 public class FirebaseSdk extends Extension {
 
+	public static String loginMode = "google";
+
+	/**
+	 * 设置登录模式
+	 * @param mode
+	 */
+	public static void setLoginMode(String mode){
+		Log.i("FirebaseSDK", "setLoginMode:"+mode);
+		loginMode = mode;
+	}
+
+	/**
+	 * 登陆邮箱ID
+	 */
+	public static void loginEmailId() {
+		FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+		if(user != null){
+			onLoginSuccess();
+		}else {
+			Intent signInIntent = AuthUI.getInstance()
+					.createSignInIntentBuilder()
+					// ... options ...
+					.setAvailableProviders(Arrays.asList(
+							new AuthUI.IdpConfig.EmailBuilder().build()))
+					.build();
+			mainActivity.startActivityForResult(signInIntent, 2);
+		}
+	}
+
 	/**
 	 * 登陆谷歌请求
 	 */
@@ -66,7 +95,6 @@ public class FirebaseSdk extends Extension {
 					.createSignInIntentBuilder()
 					// ... options ...
 					.setAvailableProviders(Arrays.asList(
-							new AuthUI.IdpConfig.EmailBuilder().build(),
 							new AuthUI.IdpConfig.GoogleBuilder().build()))
 					.build();
 			mainActivity.startActivityForResult(signInIntent, 2);
